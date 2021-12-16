@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Skydash Admin</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" th:href="@{/vendors/feather/feather.css}">
+  <link rel="stylesheet" th:href="@{/vendors/ti-icons/css/themify-icons.css}">
+  <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" th:href="@{/css/vertical-layout-light/style.css}">
+  <!-- endinject -->
+  <link rel="shortcut icon" th:src="@{/static/images/favicon.png}" />
+
+</head>
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    <div th:replace="fragments/head">This content will be gone</div>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+
+      <!-- partial:../../partials/_sidebar.html -->
+      <div th:replace="fragments/nav">This content will be gone</div>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+
+
+          <div class="row">
+
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">User List</h4>
+                  <div>
+                    <a type="button" class="btn btn-inverse-info btn-fw" th:href="@{/view/add-user}">Add User</a>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-striped"  id="userTable">
+                      <thead>
+                        <tr>
+                          <th>
+                            IMG
+                          </th>
+                          <th>
+                            First Name
+                          </th>
+                          <th>
+                            Last Name
+                          </th>
+                          <th>
+                            Category
+                          </th>
+                          <th>
+                            Username
+                          </th>
+                          <th>
+                            Action
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr th:each="user : ${listUser}">
+
+
+                          <td class="py-1" >
+                            <img  th:if="${user.photos != null}" th:src="@{${user.getPhotosImagePath()}}" alt="image">
+                            <img  th:if="${user.photos == null}" th:src="@{/images/face.png}" alt="image">
+                          </td>
+
+
+                          <td th:text="${user.firstname}">
+                            Herman
+                          </td>
+                          <td th:text="${user.surname}">
+                            Beck
+                          </td>
+                          <td th:text="${user.userCategoryModel.category}">
+                            Instructor
+                          </td>
+                          <td th:text="${user.username}">
+                            test
+                          </td>
+                          <td>
+
+
+                            <div th:if="${user.userCategoryModel.category != 'Administrator'}">
+                            <span>
+                              <a type="button" data-toggle="modal" th:attr="data-target='#userAssign'+${user.id}">
+                                <img th:src="@{/images/assign.png}">
+                              </a>
+                              <a type="button" th:href="@{'/view/student-badge-list/' + ${user.id}}" th:if="${user.userCategoryModel.category == 'Student'}">
+                                <img th:src="@{/images/info.png}">
+                              </a>
+                              </span>
+
+                            <div class="modal fade" th:attr="id='userAssign'+${user.id}" role="dialog">
+                              <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+
+                                  <div class="col-md-12 grid-margin stretch-card">
+                                    <div class="card">
+                                      <div class="card-body">
+                                        <h4 class="card-title">Assign Program</h4>
+                                        <p class="card-description">
+                                          Select Program and Submit
+                                        </p>
+                                          <form th:object="${assign}" th:action="@{/assign-program}" method="post">
+                                            <input type="hidden" th:value="${user.id}" name="userId">
+                                            <input type="hidden" th:value="${user.userCategoryModel.category}" name="category">
+                                            <div class="row">
+                                              <div class="col-md-6">
+                                                <div class="form-group row">
+                                                  <div class="col-sm-9">
+                                                    <select  class="form-control" name="programId">
+                                                      <option value="0">Select Program</option>
+                                                      <option th:each="p : ${programs}" th:value="${p.id}" th:text="${p.programName}"></option>
+                                                    </select>                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div class="col-md-6">
+
+                                              <div class="form-group row">
+                                                  <div class="col-sm-9">
+                                                    <span class="twitter-typeahead" style="position: relative; display: inline-block;">
+                                                                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+
+                                               </span>
+                                                  </div>
+
+                                              </div>
+                                              </div>
+                                            </div>
+                                          </form>
+                                          <br>
+                                          <p>
+                                          <span class="twitter-typeahead" style="position: relative; display: inline-block;">
+                                                                    <button type="submit" class="btn btn-primary mr-2" th:onclick="'window.location.href = \'' + @{/view/add-program} + '\''">Add Program</button>
+
+                                               </span>
+
+                                            <span class="twitter-typeahead" style="position: relative; display: inline-block;">
+                                                                    <button type="submit" class="btn btn-primary mr-2" th:onclick="'window.location.href = \'' + @{/view/add-user} + '\''">Add User</button>
+
+                                               </span>
+                                            <span class="twitter-typeahead" style="position: relative; display: inline-block;">
+                                                                    <button type="submit" class="btn btn-primary mr-2" th:onclick="'window.location.href = \'' + @{/view/add-badge} + '\''">Add Badge</button>
+
+                                               </span>
+
+                                          </p>
+                                        </div>
+                                    </div>
+                                  </div>
+
+
+
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                  </div>
+                                </div>
+
+                              </div>
+                            </div>
+                            </div>
+
+
+
+
+
+
+
+
+                          </td>
+                        </tr>
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        <div th:replace="fragments/footer">This content will be gone</div>
+
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+  <!-- plugins:js -->
+  <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script th:src="@{/js/off-canvas.js}"></script>
+  <script th:src="@{/js/hoverable-collapse.js}"></script>
+  <script th:src="@{/js/template.js}"></script>
+  <script th:src="@{/js/settings.js}"></script>
+  <script th:src="@{/js/todolist.js}"></script>
+
+
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <!-- End custom js for this page-->
+</body>
+
+</html>

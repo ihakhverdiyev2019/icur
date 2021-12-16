@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Skydash Admin</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" th:href="@{/vendors/feather/feather.css}">
+  <link rel="stylesheet" th:href="@{/vendors/ti-icons/css/themify-icons.css}">
+  <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+
+  <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js}"></script>
+  <script th:src="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js}"></script>
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" th:href="@{/css/vertical-layout-light/style.css}">
+  <!-- endinject -->
+  <link rel="shortcut icon" th:src="@{/static/images/favicon.png}" />
+
+</head>
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    <div th:replace="fragments/head">This content will be gone</div>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+
+      <!-- partial:../../partials/_sidebar.html -->
+      <div th:replace="fragments/nav">This content will be gone</div>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+
+
+          <div class="row">
+
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Program List</h4>
+                  <div>
+                    <a type="button" class="btn btn-inverse-info btn-fw" th:href="@{/view/add-program}">Add Program</a>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-striped"  id="userTable">
+                      <thead>
+                        <tr>
+                          <th>
+                            Program Name
+                          </th>
+                          <th>
+                            Program Duration
+                          </th>
+                          <th>
+                            Start Date
+                          </th>
+                          <th>
+                            End Date
+                          </th>
+                          <th>
+                            Action
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr th:each="p : ${programs}">
+
+                          <td th:text="${p.programName}">
+                            Herman
+                          </td>
+                          <td th:text="${p.programDuration}">
+                            Beck
+                          </td>
+                          <td th:text="${p.startDate}">
+                            Instructor
+                          </td>
+                          <td th:text="${p.endDate}">
+                            test
+                          </td>
+                          <td>
+                            <a type="button" data-toggle="modal" th:attr="data-target='#myModal'+${p.id}"><img th:src="@{/images/instructor.png}"></a>
+                            <div class="modal fade" th:attr="id='myModal'+${p.id}" role="dialog">
+                              <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title">List Of Instructor</h4>
+                                  </div>
+                                  <div class="modal-body" th:if="${not #lists.isEmpty(p.instructorProgram)}">
+                                    <p th:each="ins : ${p.instructorProgram}">
+                                      <span th:text="${ins.instructor.firstname} + ' ' + ${ins.instructor.surname}">Instructor</span>
+
+
+
+
+
+
+
+                                      <span>
+                                      <button type="button" class="btn btn-inverse-danger btn-icon"
+                                              th:onclick="'window.location.href = \'' + @{/instructor-unassign/{pid}/{sid}(pid=${p.id},sid=${ins.instructor.id})} + '\''">
+                                        <i class="ti-trash"></i>
+                                      </button>
+                                      </span>
+                                    </p>
+
+
+                                  </div>
+
+                                  <div class="modal-body" th:if="${#lists.isEmpty(p.instructorProgram)}">
+                                    <p>
+                                      <span>No Data Found !</span>
+                                    </p>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                  </div>
+                                </div>
+
+                              </div>
+                            </div>
+
+
+
+
+
+
+
+                            <a type="button" data-toggle="modal" th:attr="data-target='#myModals'+${p.id}"><img th:src="@{/images/student.png}"></a>
+                            <div class="modal fade" th:attr="id='myModals'+${p.id}" role="dialog">
+                              <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title">List Of Student</h4>
+
+                                  </div>
+                                  <p>
+                                    <a type="button" class="btn btn-inverse-success btn-fw" th:href="@{'/enable-all-collect-badge/' + ${p.id}}">
+                                      <i class="ti-check btn-icon-prepend"></i>
+                                      Enable All Collection
+                                    </a>
+                                    <a type="button" class="btn btn-inverse-primary btn-fw" th:href="@{'/disable-all-collect-badge/' + ${p.id}}">
+                                      <i class="ti-na btn-icon-prepend"></i>
+                                      Disable All Collection
+                                    </a>
+                                  </p>
+                                  <div class="modal-body" th:if="${not #lists.isEmpty(p.studentProgram)}">
+                                    <p th:each="ins : ${p.studentProgram}" >
+                                      <span th:text="${ins.student.firstname} + ' ' + ${ins.student.surname}">Student</span>
+                                      <span th:if="${ins.status == 0}">
+
+                                        <a type="button" class="btn btn-inverse-success btn-fw" th:href="@{'/enable-collect-badge/' + ${p.id} +'/' + ${ins.student.id}}">
+                                            <i class="ti-check btn-icon-prepend"></i>
+                                            Enable Collection
+                                          </a>
+                                      </span>
+
+                                      <span th:if="${ins.status == 1}">
+                                        <a type="button" class="btn btn-inverse-primary btn-fw" th:href="@{'/disable-collect-badge/' + ${p.id} +'/' + ${ins.student.id}}">
+                                            <i class="ti-na btn-icon-prepend"></i>
+                                            Disable Collection
+                                          </a>
+
+                                      </span>
+
+                                      <span>
+                                     <button type="button" class="btn btn-inverse-danger btn-icon"
+                                             th:onclick="'window.location.href = \'' + @{/student-unassign/{pid}/{sid}(pid=${p.id},sid=${ins.student.id})} + '\''">
+                                        <i class="ti-trash"></i>
+                                      </button>
+                                      </span>
+
+                                    </p>
+
+                                  </div>
+                                  <div class="modal-body" th:if="${#lists.isEmpty(p.studentProgram)}">
+                                  <p>
+                                    <span>No Data Found !</span>
+                                  </p>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                  </div>
+                                </div>
+
+                              </div>
+                            </div>
+
+
+
+
+                            <a type="button" data-toggle="modal" th:attr="data-target='#myModalb'+${p.id}"><img th:src="@{/images/badge.png}"></a>
+                            <div class="modal fade" th:attr="id='myModalb'+${p.id}" role="dialog">
+                              <div class="modal-dialog" th:if="${not #lists.isEmpty(p.programBadge)}">
+                                <!-- Modal content-->
+                                <div class="modal-content" th:each="b : ${p.programBadge}">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title" th:text="${b.badgesModel.badgeName}">Badge Name</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                    <p >
+                                      <img style="width: 50%; height: 50%" th:src="@{${b.badgesModel.getPhotosImagePath()}}">
+                                    </p>
+                                  </div>
+
+
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                  </div>
+                                </div>
+
+                              </div>
+
+
+                              <div class="modal-dialog" th:if="${#lists.isEmpty(p.programBadge)}">
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4 class="modal-title">Badge Details</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                    <p>
+                                      <span>No Data Found !</span>
+                                    </p>
+                                  </div>
+
+
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                  </div>
+                                </div>
+
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        <div th:replace="fragments/footer">This content will be gone</div>
+
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+  <!-- plugins:js -->
+  <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script th:src="@{/js/off-canvas.js}"></script>
+  <script th:src="@{/js/hoverable-collapse.js}"></script>
+  <script th:src="@{/js/template.js}"></script>
+  <script th:src="@{/js/settings.js}"></script>
+  <script th:src="@{/js/todolist.js}"></script>
+
+
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <!-- End custom js for this page-->
+</body>
+
+</html>

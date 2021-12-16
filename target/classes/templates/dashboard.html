@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Skydash Admin</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" th:href="@{/vendors/feather/feather.css}">
+  <link rel="stylesheet" th:href="@{/vendors/ti-icons/css/themify-icons.css}">
+  <link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <link rel="stylesheet" th:href="@{/vendors/datatables.net-bs4/dataTables.bootstrap4.css}">
+  <link rel="stylesheet" th:href="@{/vendors/ti-icons/css/themify-icons.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/js/select.dataTables.min.css}">
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" th:href="@{/css/vertical-layout-light/style.css}">
+  <link rel="stylesheet" type="text/css" href="extensions/filter-control/bootstrap-table-filter-control.css">
+
+  <!-- endinject -->
+  <link rel="shortcut icon" th:href="@{/static/images/favicon.png}" />
+</head>
+<body>
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <div th:replace="fragments/head">This content will be gone</div>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+
+      <!-- partial:partials/_sidebar.html -->
+      <div th:replace="fragments/nav">This content will be gone</div>
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12 grid-margin">
+              <div class="row">
+                <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                  <h3 class="font-weight-bold" th:text=" 'Welcome! ' + ${enteranceUser.getFirstname()} + ' ' + ${enteranceUser.getSurname()}">Welcome </h3>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 grid-margin stretch-card">
+              <div class="card tale-bg">
+                <div class="card-people mt-auto">
+                  <img th:src="@{/images/dashboard/people.svg}" alt="people">
+                  <div class="weather-info">
+                    <div class="d-flex">
+                      <div>
+                        <h2 class="mb-0 font-weight-normal"><i class="icon-sun mr-2"></i>31<sup>C</sup></h2>
+                      </div>
+                      <div class="ml-2">
+                        <h4 class="location font-weight-normal">Baku</h4>
+                        <h6 class="font-weight-normal">Azerbaijan</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 grid-margin transparent">
+              <div class="row">
+                <div class="col-md-6 mb-4 stretch-card transparent">
+                  <div class="card card-tale">
+                    <div class="card-body">
+                      <p class="mb-4">Number of Programs</p>
+                      <p class="fs-30 mb-2" th:text="${programs}">4006</p>
+                      <p></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-4 stretch-card transparent">
+                  <div class="card card-dark-blue">
+                    <div class="card-body">
+                      <p class="mb-4">Number of Badges</p>
+                      <p class="fs-30 mb-2" th:text="${badges}">61344</p>
+                      <p></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
+                  <div class="card card-light-blue">
+                    <div class="card-body">
+                      <p class="mb-4">Number of Instructors</p>
+                      <p class="fs-30 mb-2" th:text="${instructors}">34040</p>
+                      <p></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 stretch-card transparent">
+                  <div class="card card-light-danger">
+                    <div class="card-body">
+                      <p class="mb-4">Number of Students</p>
+                      <p class="fs-30 mb-2" th:text="${students}">47033</p>
+                      <p></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+        <div th:replace="fragments/footer">This content will be gone</div>
+
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- plugins:js -->
+  <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <script th:src="@{/vendors/chart.js/Chart.min.js}"></script>
+  <script th:src="@{/vendors/datatables.net/jquery.dataTables.js}"></script>
+  <script th:src="@{/vendors/datatables.net-bs4/dataTables.bootstrap4.js}"></script>
+  <script th:src="@{/js/dataTables.select.min.js}"></script>
+
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script th:src="@{/js/off-canvas.js}"></script>
+  <script th:src="@{/js/hoverable-collapse.js}"></script>
+  <script th:src="@{/js/template.js}"></script>
+  <script th:src="@{/js/settings.js}"></script>
+  <script th:src="@{/js/todolist.js}"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script th:src="@{/js/dashboard.js}"></script>
+  <script th:src="@{/js/Chart.roundedBarCharts.js}"></script>
+  <!-- End custom js for this page-->
+</body>
+
+</html>
+
