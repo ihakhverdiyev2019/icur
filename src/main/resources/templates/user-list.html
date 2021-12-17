@@ -72,7 +72,7 @@
 
 
                           <td class="py-1" >
-                            <img  th:if="${user.photos != null}" th:src="@{${user.getPhotosImagePath()}}" alt="image">
+                            <img  th:if="${user.photos != null}" th:src="@{'http://localhost:63342/icurriculum/static' +${user.getPhotosImagePath()}}" alt="image">
                             <img  th:if="${user.photos == null}" th:src="@{/images/face.png}" alt="image">
                           </td>
 

@@ -18,6 +18,10 @@ public class BadgesModel {
     private List<StudentCollections> studentCollections;
 
 
+    @OneToMany(mappedBy="badgesModel")
+    private List<CollectionModel> collectionModels;
+
+
     @Column(nullable = true)
     private String photos;
 
@@ -65,9 +69,17 @@ public class BadgesModel {
         this.studentCollections = studentCollections;
     }
 
+    public List<CollectionModel> getCollectionModels() {
+        return collectionModels;
+    }
+
+    public void setCollectionModels(List<CollectionModel> collectionModels) {
+        this.collectionModels = collectionModels;
+    }
+
     @Transient
     public String getPhotosImagePath() {
 
-        return "/images/badge-photo/" + photos;
+        return "/images/badges/" +id +"/" + photos;
     }
 }

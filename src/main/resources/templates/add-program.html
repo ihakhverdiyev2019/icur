@@ -24,6 +24,7 @@
   <link th:href="@{https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet"/>
   <link th:href="@{https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css}" rel="stylesheet"/>
 
+
 </head>
 
 <body>
@@ -59,14 +60,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="col-md-6">
-                        <div class="form-group row">
-                          <label class="col-sm-3 col-form-label">Program Duration</label>
-                          <div class="col-sm-9">
-                            <input type="text" class="form-control" name="programDuration" required/>
-                          </div>
-                        </div>
-                      </div>
+
 
 
                       <div class="col-md-6">
@@ -107,7 +101,7 @@
                         <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Instructor</label>
                           <div class="col-sm-9">
-                            <select  class="form-control selectpicker"  multiple data-selected-text-format="count > 3" name="instructorsId">
+                            <select  class="form-control select" multiple data-mdb-filter="true" name="instructorsId">
                               <option value="0">Select Instructor</option>
                               <option th:each="i : ${instructors}" th:value="${i.id}" th:text="${i.firstname} + ' ' + ${i.surname}"></option>
                             </select>
@@ -121,7 +115,7 @@
                         <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Student</label>
                           <div class="col-sm-9">
-                            <select class="form-control selectpicker"  multiple data-selected-text-format="count > 3" name="studentsId">
+                            <select class="form-control select" multiple data-mdb-filter="true"  name="studentsId">
                               <option value="0">Select Student</option>
                               <option th:each="s : ${students}" th:value="${s.id}" th:text="${s.firstname} + ' ' + ${s.surname}"></option>
                             </select>
@@ -156,6 +150,8 @@
     $('.selectpicker').selectpicker();
   });
   </script>
+
+
   <script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
   <!-- endinject -->
   <!-- Plugin js for this page -->

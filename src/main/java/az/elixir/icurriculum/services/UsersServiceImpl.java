@@ -5,10 +5,14 @@ import az.elixir.icurriculum.models.UserCategoryModel;
 import az.elixir.icurriculum.models.UsersModel;
 import az.elixir.icurriculum.repositories.UserCategoryRepository;
 import az.elixir.icurriculum.repositories.UsersRepository;
+import az.elixir.icurriculum.utils.FileUploadUtil;
 import az.elixir.icurriculum.utils.SHAEncryption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -32,7 +36,7 @@ public class UsersServiceImpl implements UsersService{
     }
 
     @Override
-    public void saveUser(AddUserDTO addUserDTO) {
+    public void saveUser(AddUserDTO addUserDTO , MultipartFile multipartFile) throws IOException {
         SHAEncryption shaEncryption = new SHAEncryption();
         UsersModel usersModel = new UsersModel();
         UserCategoryModel userCategoryModel = userCategoryService.getCategoryById(addUserDTO.getCategoryId());
@@ -41,9 +45,18 @@ public class UsersServiceImpl implements UsersService{
         usersModel.setSurname(addUserDTO.getLastname());
         usersModel.setUsername(addUserDTO.getUsername());
         usersModel.setPassword(shaEncryption.getEncryptPass(addUserDTO.getPassword()));
+        usersModel.setPhotos(addUserDTO.getPhoto());
         usersModel.setUserCategoryModel(userCategoryModel);
+        String fileName=null;
+        if (multipartFile!=null){
+            fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+            usersModel.setPhotos(fileName);
+        }
 
         usersRepository.save(usersModel);
+        String uploadDir = "./src/main/resources/static/images/user-profile-photo/" + usersModel.getId() ;
+
+        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
     }
 
     @Override

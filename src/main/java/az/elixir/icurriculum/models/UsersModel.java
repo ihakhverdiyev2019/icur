@@ -114,6 +114,6 @@ public class UsersModel {
     @Transient
     public String getPhotosImagePath() {
 
-        return "/images/user-photo/" + photos;
+        return "/images/user-profile-photo/" +id+"/"+ photos;
     }
 }

@@ -11,7 +11,6 @@ public class ProgramsModel {
     private int id;
 
     private String programName;
-    private String programDuration;
     private String startDate;
     private String endDate;
 
@@ -47,13 +46,6 @@ public class ProgramsModel {
         this.programName = programName;
     }
 
-    public String getProgramDuration() {
-        return programDuration;
-    }
-
-    public void setProgramDuration(String programDuration) {
-        this.programDuration = programDuration;
-    }
 
     public String getStartDate() {
         return startDate;

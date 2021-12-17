@@ -6,11 +6,14 @@ import az.elixir.icurriculum.dtos.AddProgramDTO;
 import az.elixir.icurriculum.dtos.AddUserDTO;
 import az.elixir.icurriculum.dtos.AssignProgramDTO;
 import az.elixir.icurriculum.models.BadgesModel;
+import az.elixir.icurriculum.models.CollectionModel;
 import az.elixir.icurriculum.models.UsersModel;
 import az.elixir.icurriculum.services.BadgeService;
 import az.elixir.icurriculum.services.ProgramService;
 import az.elixir.icurriculum.services.UsersService;
 import az.elixir.icurriculum.utils.FileUploadUtil;
+import az.elixir.icurriculum.utils.QRCodeGenerator;
+import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -35,18 +38,12 @@ public class DashboardController {
 
 
     @RequestMapping(value = "/add-user", method = RequestMethod.POST)
-    public String addUser(@Validated @ModelAttribute("user") AddUserDTO addUserDTO, @RequestParam("image") MultipartFile multipartFile,HttpSession httpSession, RedirectAttributes redirectAttributes) throws IOException {
+    public String addUser(@Validated @ModelAttribute("user") AddUserDTO addUserDTO, @RequestParam(value = "image", required = false) MultipartFile multipartFile,HttpSession httpSession, RedirectAttributes redirectAttributes) throws IOException {
         UsersModel enteranceUser = (UsersModel) httpSession.getAttribute("user");
         if (enteranceUser != null && enteranceUser.getUserCategoryModel().getCategory().equals("Administrator")) {
 
-            String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
 
-            addUserDTO.setPhoto(fileName);
-            String uploadDir = "src/main/resources/static/images/user-profile-photo/";
-
-            FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-
-            usersService.saveUser(addUserDTO);
+            usersService.saveUser(addUserDTO,multipartFile);
             return "redirect:/view/user-list";
 
 
@@ -70,7 +67,9 @@ public class DashboardController {
 
 
     @RequestMapping(value = "/add-badge", method = RequestMethod.POST)
-    public String addUser(@Validated @ModelAttribute("badge") AddBadgeDTO addBadgeDTO, HttpSession httpSession, @RequestParam("image") MultipartFile multipartFile) throws IOException {
+    public String addUser(@Validated @ModelAttribute("badge") AddBadgeDTO addBadgeDTO, HttpSession httpSession,
+                          @RequestParam("image") MultipartFile multipartFile,
+                          @RequestParam("collections") MultipartFile[] files) throws IOException {
         UsersModel enteranceUser = (UsersModel) httpSession.getAttribute("user");
         if (enteranceUser != null && (enteranceUser.getUserCategoryModel().getCategory().equals("Administrator")
                 ||enteranceUser.getUserCategoryModel().getCategory().equals("Instructor")) ) {
@@ -81,9 +80,34 @@ public class DashboardController {
 
             BadgesModel savedBadge = badgeService.saveBadge(badgesModel);
 
-            String uploadDir = "src/main/resources/static/images/badge-photo/";
+            String uploadDir = "./src/main/resources/static/images/badges/"+savedBadge.getId();
 
             FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+
+            System.out.println(files.length);
+            if(files.length>0){
+                for(int i=0;i< files.length;i++){
+                    CollectionModel collectionModel = new CollectionModel();
+
+                    collectionModel.setBadgesModel(badgesModel);
+                    String badge1 = StringUtils.cleanPath(files[i].getOriginalFilename());
+
+                    collectionModel.setPhotos(badge1);
+
+                    CollectionModel cm = badgeService.saveCollections(collectionModel);
+
+                    String uploadDirCollection = "./src/main/resources/static/images/collections/"+cm.getId();
+
+                    FileUploadUtil.saveFile(uploadDirCollection, badge1, files[i]);
+                }
+
+
+            }
+
+
+
+
+
             return "redirect:/view/badge-list";
 
 
@@ -127,9 +151,12 @@ public class DashboardController {
 
 
     @RequestMapping(value = "/enable-collect-badge/{pid}/{sid}", method = RequestMethod.GET)
-    public String enableCollectBadgeByStudent(@PathVariable("sid") String sid, @PathVariable("pid") String pid, HttpSession httpSession){
+    public String enableCollectBadgeByStudent(@PathVariable("sid") String sid, @PathVariable("pid") String pid, HttpSession httpSession) throws IOException, WriterException {
         UsersModel enteranceUser = (UsersModel) httpSession.getAttribute("user");
         if (enteranceUser != null && enteranceUser.getUserCategoryModel().getCategory().equals("Administrator")) {
+
+
+
 
             badgeService.enableTheCollection(sid,pid);
 

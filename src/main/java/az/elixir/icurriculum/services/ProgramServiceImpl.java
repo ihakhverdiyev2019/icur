@@ -42,7 +42,6 @@ public class ProgramServiceImpl implements ProgramService {
         ProgramsModel programsModel = new ProgramsModel();
         programsModel.setProgramName(addProgramDTO.getProgramName());
 
-        programsModel.setProgramDuration(addProgramDTO.getProgramDuration());
 
         programsModel.setEndDate(addProgramDTO.getEndDate());
         programsModel.setStartDate(addProgramDTO.getStartDate());

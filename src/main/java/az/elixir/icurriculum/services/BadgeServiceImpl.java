@@ -2,9 +2,13 @@ package az.elixir.icurriculum.services;
 
 import az.elixir.icurriculum.models.*;
 import az.elixir.icurriculum.repositories.*;
+import az.elixir.icurriculum.utils.CombineImages;
+import az.elixir.icurriculum.utils.QRCodeGenerator;
+import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +31,8 @@ public class BadgeServiceImpl implements BadgeService{
     @Autowired
     private StudentCollectionRepository studentCollectionRepository;
 
+    @Autowired
+    private CollectionRepository collectionRepository;
 
     @Autowired
     private UsersService usersService;
@@ -91,7 +97,7 @@ public class BadgeServiceImpl implements BadgeService{
 
 
     @Override
-    public void enableTheCollection(String studentId, String programId) {
+    public void enableTheCollection(String studentId, String programId) throws IOException, WriterException {
         StudentCollections studentCollections = new StudentCollections();
 
         UsersModel usersModel = usersService.getById(studentId);
@@ -105,7 +111,12 @@ public class BadgeServiceImpl implements BadgeService{
         studentCollections.setStudentProgram(studentProgram);
         studentProgramRepository.save(studentProgram);
         studentCollectionRepository.save(studentCollections);
+        String QR_CODE_IMAGE_PATH = "./src/main/resources/static/images/QR/"+studentId+"-"+programId+ ".png";
 
+        QRCodeGenerator.generateQRCodeImage("http://localhost:9543/view/student-form/"+studentId+"/"+programId,200,200,QR_CODE_IMAGE_PATH);
+
+        CombineImages combineImages = new CombineImages();
+        combineImages.combine("./src/main/resources/static/images/badges/badge.png","./src/main/resources/static/images/QR/"+studentId+"-"+programId+ ".png",350,350);
 
 
     }
@@ -179,6 +190,11 @@ public class BadgeServiceImpl implements BadgeService{
 
         studentCollectionRepository.deleteAll(studentCollections);
 
+    }
+
+    @Override
+    public CollectionModel saveCollections(CollectionModel collectionModel) {
+        return collectionRepository.save(collectionModel);
     }
 
 }
